@@ -1,48 +1,67 @@
+// TODO: download text data from gist source and convert it to html file, implement logic to find the license key appended to the license id
 const dep = {
   ws: import("ws"),
   fs: import("fs"),
   http: import("http"),
   ejs: import("ejs"),
   cache: import("cache-manager"),
-  redis: import("redis")
+  mysql: import("easy-mysql-js"),
+<<<<<<< HEAD
+};
+=======
 }
+>>>>>>> 2ec0064d5e350fd4a7e9cd406de4097a5acbb864
 const cache = dep.cache.createCache({
   ttl: 10000,
   refreshThreshold: 0,
 });
-const db = await dep.redis.createClient({
-  url: process.env.REDIS
-})
-  .on('error', err => console.log('Redis Client Error', err))
-    .connect();
 const port = process.env.PORT || 3001;
-function handle(req) {
-  if(JSON.parse(dep.fs.readFileSync("cache.json")).find((id) => JSON.parse(req.body).id)) return JSON.stringify(JSON.parse(dep.fs.readFileSync("cache.json")).find((id) => event.data).clients);
+async function evaluate(db, body) {
+  switch (body.method) {
+    case "PAYLOAD": {
+<<<<<<< HEAD
+      let key = "logic to find the license key associated with the license id";
+=======
+      let key = "test";
+>>>>>>> 2ec0064d5e350fd4a7e9cd406de4097a5acbb864
+      await cache.set(key, body.payload);
+    }
+    case "COLLECT":
+      return await cache.get(body.sec);
+  }
 }
-const server = dep.http.createServer((req, res) => {
-  dep.fs.readFileSync("index.ejs", {encoding: 'utf8'}, (data) => {
-    let header = {
-      "type":"text/html",
-      "body": dep.ejs.render(data,
-      {
-        test: "hello world"
-      },
-      {
-        async: true
-      })
+async function handle(req, res) {
+  let header = {};
+<<<<<<< HEAD
+  const db = await mysql.Select("select * from licenses");
+  const body = JSON.parse(req.body);
+  dep.fs.readFileSync("index.ejs", { encoding: "utf8" }, (data) => {
+    header = {
+      type: "text/html",
+      body: dep.ejs.render(data, { test: "hello world" }, { async: true }),
+=======
+  const db = await mysql.Select("select * from license");
+  const body = JSON.parse(req.body);
+  dep.fs.readFileSync("index.ejs", { encoding: "utf8" }, (data) => {
+    header = {
+      "type": "text/html",
+      "body": dep.ejs.render(data, { test: "hello world" }, { async: true }),
+>>>>>>> 2ec0064d5e350fd4a7e9cd406de4097a5acbb864
     };
-    if(req.method.includes("POST")) header = {"type":"application/json","body":handle(req)};
-    res.writeHeader(200, {"Content-Type": header.type});
-    res.write(header.body);
-    res.end();
   });
-});
-const wss = new dep.ws.WebSocketServer({ server: server });
-wss.on("connecton", (ws) => {
-  ws.on("message", (event) => {
-    const data = JSON.parse(dep.fs.readFileSync("cache.json"));
-    if(!data[JSON.parse(event.data).id].clients[JSON.parse(event.data).id].find((data) => JSON.parse(event.data).body) && JSON.parse(event.data).method.includes("payload")) data[JSON.parse(event.data).id].clients[JSON.parse(event.data).id].append(JSON.parse(event.data).body);
-    dep.fs.writeFileSync("cache.json",JSON.stringify(data));
-  });
-});
+  switch (req.method.includes("POST") && db.find((key, id) => body.sec)) {
+    case true:
+      header = {
+        type: "application/json",
+        body: evaluate(db, body),
+      };
+<<<<<<< HEAD
+  }
+=======
+>>>>>>> 2ec0064d5e350fd4a7e9cd406de4097a5acbb864
+  res.writeHeader(200, { "Content-Type": header.type });
+  res.write(header.body);
+  res.end();
+}
+const server = dep.http.createServer((req, res) => handle(req, res));
 server.listen(port);

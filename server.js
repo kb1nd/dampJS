@@ -49,7 +49,7 @@ async function handle(req, res) {
   res.write(header.body);
   res.end();
 }
-const server = dep.http.createServer((req, res) => handle(req, res));
+const server = dep.http.createServer(function(req, res) { handle(req, res) });
 server.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on http://0.0.0.0:${port}`);
 });

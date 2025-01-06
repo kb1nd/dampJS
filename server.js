@@ -18,16 +18,18 @@ async function evaluate(db, body) {
         db.find((license) => license.id === body.sec).key,
         body.payload,
       );
+      break;
     }
     case "COLLECT":
       return await cache.get(body.sec);
+      break;
   }
 }
 async function handle(req, res) {
   let header;
   const db = await mysql.Select("select * from license");
   const body = JSON.parse(req.body);
-  switch (req.method.includes("POST") && db.find((key, id) => body.sec)) {
+  switch (req.method.includes("POST")) {
     case true:
       Object.assign(header, {
         type: "application/json",
